@@ -15,93 +15,93 @@ import { required, len } from './lib/base.js'
 
 
 class VuetifyValidator {
-    constructor(context) {
+    constructor(context,i18n) {
         this.context = context
-        this.$t = this.context.$t || ((message) => message)
+        this.$t = i18n || this.context.$t || ((message) => message)
     }
-    required(ctx, message) {
-        return (v) => required(v) || ctx.$t(message)
+    required(message='This Field is required !') {
+        return (v) => required(v) || this.context.$t(message)
     }
     /* Is true */
-    isTrue(ctx, message) {
-        return (v) => Boolean(v) || ctx.$t(message)
+    isTrue(message='This field should be true !') {
+        return (v) => Boolean(v) || this.context.$t(message)
     }
     /* Numeric */
-    isNumeric(ctx, message) {
-        return (v) => numeric(v) || ctx.$t(message)
+    isNumeric(message='This Fields Should be numeric') {
+        return (v) => numeric(v) || this.context.$t(message)
     }
     /* Server error with */
-    seWith(ctx, name) {
+    seWith(name) {
         return (v) =>
-            (v && !ctx.serverErrorDetails[name]) || String(ctx.serverErrorDetails[name])
+            (v && !this.context.serverErrorDetails[name]) || String(this.context.serverErrorDetails[name])
     }
     /* Server message error contains */
-    seContains(ctx, name) {
-        return (v) => (v && !ctx.serverError.includes(name)) || ctx.serverError
+    seContains(name) {
+        return (v) => (v && !this.context.serverError.includes(name)) || this.context.serverError
     }
     // other custom rules
-    isEmailOrPhone(ctx, message) {
-        return (v) => email(v) || phone(v) || ctx.$t(message)
+    isEmailOrPhone(message='Should be email or phone number') {
+        return (v) => email(v) || phone(v) || this.context.$t(message)
     }
 
-    isEmail(ctx, message) {
-        return (v) => email(v) || ctx.$t(message)
+    isEmail(message='Should be a valid email') {
+        return (v) => email(v) || this.context.$t(message)
     }
 
-    isPhone(ctx, message) {
-        return (v) => phone(v) || ctx.$t(message)
+    isPhone(message='Should be a valid phone number') {
+        return (v) => phone(v) || this.context.$t(message)
     }
 
-    isStrongPassword(ctx, message) {
-        return (v) => strongPassword(v) || ctx.$t(message)
+    isStrongPassword(message='Please enter a strong password') {
+        return (v) => strongPassword(v) || this.context.$t(message)
     }
 
-    isEquals(ctx, valueKey, message) {
-        return (v) => v === get(ctx, valueKey) || ctx.$t(message)
+    isEquals(valueKey, message='Not matching !') {
+        return (v) => v === get(valueKey) || this.context.$t(message)
     }
 
-    min(ctx, minLength, message) {
-        return (v) => !v || len(v) >= minLength || ctx.$t(message)
+    min(minLength, message) {
+        return (v) => !v || len(v) >= minLength || this.context.$t(message)
     }
 
-    max(ctx, maxLength, message) {
-        return (v) => !v || len(v) <= maxLength || ctx.$t(message)
+    max(maxLength, message) {
+        return (v) => !v || len(v) <= maxLength || this.context.$t(message)
     }
 
-    minValue(ctx, minLimit, message) {
+    minValue(minLimit, message) {
         return (v) =>
-            parseFloat(v) >= parseFloat(get(ctx, minLimit)) ||
-            `${ctx.$t(message)} ${get(ctx, minLimit)}`
+            parseFloat(v) >= parseFloat(get(minLimit)) ||
+            `${this.context.$t(message)} ${get(minLimit)}`
     }
 
-    maxValue(ctx, maxLimit, message) {
+    maxValue(maxLimit, message) {
         return (v) =>
-            parseFloat(v) <= parseFloat(get(ctx, maxLimit)) ||
-            `${ctx.$t(message)} ${get(ctx, maxLimit)}`
+            parseFloat(v) <= parseFloat(get(maxLimit)) ||
+            `${this.context.$t(message)} ${get(maxLimit)}`
     }
 
-    isValidName(ctx, message) {
-        return (v) => validName(v) || ctx.$t(message)
+    isValidName(message='Shoul be valid name !') {
+        return (v) => validName(v) || this.context.$t(message)
     }
 
-    isNumberWithMaxTwoDecimal(ctx, message) {
-        return (v) => numberWithMaxTwoDecimalPoint(v) || ctx.$t(message)
+    isNumberWithMaxTwoDecimal(message) {
+        return (v) => numberWithMaxTwoDecimalPoint(v) || this.context.$t(message)
     }
 
 
-    isAlpha(ctx, message) {
-        return (v) => alpha(v) || ctx.$t(message)
+    isAlpha(message) {
+        return (v) => alpha(v) || this.context.$t(message)
     }
-    IsAlphaNumeric(ctx, message) {
-        return (v) => alphaNumeric(v) || ctx.$t(message)
+    IsAlphaNumeric(message) {
+        return (v) => alphaNumeric(v) || this.context.$t(message)
     }
-    IsPincode(ctx, message) {
-        return (v) => pincode(v) || ctx.$t(message)
+    IsPincode(message) {
+        return (v) => pincode(v) || this.context.$t(message)
     }
 
-    IsValidFile(ctx, maxSize, allowedTypes, message) {
+    IsValidFile(maxSize, allowedTypes, message='Should be a valid file!') {
         return (v) =>
-            (v.size <= maxSize && allowedTypes.includes(v.type)) || ctx.$t(message)
+            (v.size <= maxSize && allowedTypes.includes(v.type)) || this.context.$t(message)
     }
 
 }
